@@ -1,7 +1,7 @@
 const {response, request} = require("express");
 //
 let Contenedor = require("./contenedor");
-let contenedor = new Contenedor("./file/productos.txt");
+let contenedor = new Contenedor("productos");
 
 
 const productosGet = async(req=request,res=response,next)=>{

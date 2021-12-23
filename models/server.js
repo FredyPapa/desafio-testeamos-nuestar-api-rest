@@ -46,8 +46,8 @@ class server{
 
     sockets(){
         let Contenedor = require("../controllers/contenedor");
-        let contenedor = new Contenedor("./file/productos.txt");
-        let contenedorChat = new Contenedor("./file/mensajes.txt");
+        let contenedor = new Contenedor("productos");
+        let contenedorChat = new Contenedor("mensajes");
         //Al conectarse
         this.io.on("connection",async(socket) => {
             //Al conectarse
