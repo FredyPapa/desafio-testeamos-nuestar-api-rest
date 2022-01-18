@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "author": {
+      "id": "fpapa@gmail.com",
+      "nombre": "Guillermina",
+      "apellido": "Salazar",
+      "edad": 73,
+      "alias": "c",
+      "avatar": "https://cdn.fakercloud.com/avatars/davidhemphill_128.jpg"
+    },
+    "text": "Hola 1"
+  },
+  {
+    "id": 2,
+    "author": {
+      "id": "fredy.luis.wolf@gmail.com",
+      "nombre": "Ana Luisa",
+      "apellido": "Lozada",
+      "edad": 40,
+      "alias": "c",
+      "avatar": "https://cdn.fakercloud.com/avatars/nyancecom_128.jpg"
+    },
+    "text": "Hola 2"
+  },
+  {
+    "id": 3,
+    "author": {
+      "id": "fredy.luis.wolf@gmail.com",
+      "nombre": "Adela",
+      "apellido": "Bonilla",
+      "edad": 94,
+      "alias": "b",
+      "avatar": "https://cdn.fakercloud.com/avatars/_dwite__128.jpg"
+    },
+    "text": "asdfasdf"
+  }
+]

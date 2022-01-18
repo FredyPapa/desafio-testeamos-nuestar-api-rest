@@ -1,12 +1,17 @@
 const {response, request} = require("express");
 //
 let Contenedor = require("./contenedor");
-let contenedor = new Contenedor("productos");
+let contenedor = new Contenedor("productos","./file/productos.txt");
 
 
 const productosGet = async(req=request,res=response,next)=>{
     //res.send(await contenedor.getAll());
     res.render("../listado", {data:await contenedor.getAll()});
+}
+
+const productosTestGet = async(req=request,res=response,next)=>{
+    //res.send(await contenedor.getAll());
+    res.render("../listado", {data:await contenedor.getTestAll()});
 }
 
 const productosPost = async(req=request,res=response,next)=>{
@@ -21,5 +26,6 @@ const productosPost = async(req=request,res=response,next)=>{
 
 module.exports = {
     productosGet,
-    productosPost
+    productosPost,
+    productosTestGet
 }

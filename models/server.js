@@ -10,7 +10,7 @@ class server{
         this.port = process.env.PORT;
         this.server = require("http").createServer(this.app);
         this.io = require("socket.io")(this.server);
-        this.productosPath = "/productos";
+        this.productosPath = "/api/productos";
         //Middlewares
         this.middlewares();
         //Rutas de mi aplicación
@@ -47,7 +47,7 @@ class server{
     sockets(){
         let Contenedor = require("../controllers/contenedor");
         let contenedor = new Contenedor("productos");
-        let contenedorChat = new Contenedor("mensajes");
+        let contenedorChat = new Contenedor("mensajes","./file/mensajes.txt");
         //Al conectarse
         this.io.on("connection",async(socket) => {
             //Al conectarse
@@ -100,8 +100,9 @@ class server{
             //Cuando un usuario envía un mensaje por el chat
             socket.on("mensaje", async data =>{
                 this.mensajes.push(data);
-                await contenedorChat.saveMensaje(data);
+                let respuesta = await contenedorChat.saveMensaje(data);
                 this.io.sockets.emit('listenserver', this.mensajes);
+                this.io.sockets.emit('respuesta', respuesta);
             });
         });
     }

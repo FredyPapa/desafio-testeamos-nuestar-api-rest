@@ -98,3 +98,9 @@ socket.on("listenserver", data =>{
     });
     divChat.innerHTML = inner;
 });
+
+//Cuando se envía un mensaje por el chat
+socket.on("respuesta", data =>{
+    console.log("Respuesta", data);
+});
+

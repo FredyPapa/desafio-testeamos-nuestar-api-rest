@@ -1,12 +1,18 @@
-//const fs = require("fs");
+let faker = require('faker');
+faker.locale = "es";
+const fs = require("fs");
 const db_knex_mysql = require("../config/db-mysql");
 const db_knex_sqlite3 = require("../config/db-sqlite3");
 const db_mysql = db_knex_mysql.client;
-const db_sqlite3 = db_knex_sqlite3.client;
+//const db_sqlite3 = db_knex_sqlite3.client;
+let {schema,normalize,denormalize} = require('normalizr');
+let inspect = require('../utils/objectPrinter');
 
 class Contenedor{
-    constructor(tabla){
+    constructor(tabla,url){
         this.tabla = tabla;
+        this.url = url;
+        this.arregloMensajes = [];
     }
     //Cargar elementos al arreglo de Productos
     async loadArray(){
@@ -59,21 +65,67 @@ class Contenedor{
         }
     }
 
+    //Generar y devolver 5 productos de prueba
+    async getTestAll(){
+        try {
+            const  productosTest = [];
+            for (let i = 0; i < 5; i++) {
+                const obj = {
+                    id:i+1,
+                    title: faker.commerce.productName(),
+                    price: faker.commerce.price(),
+                    thumbnail: faker.image.image()
+                }
+                productosTest.push(obj);
+            }
+            return productosTest;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     //Crear/Agregar mensaje de chat
     async saveMensaje(data){
         try {
-            //Validamos si existe la tabla
-            let existe = await db_sqlite3.schema.hasTable(this.tabla);
-            //Si no existe Creamos la tabla
-            if(!existe){
-                await db_sqlite3.schema.createTable(this.tabla,table=>{
-                    table.string("correo"),
-                    table.string("fechaYHora"),
-                    table.string("mensaje")
-                });
+            //Damos forma a la Data
+            const mensaje = {
+                "id":this.arregloMensajes.length+1,
+                author: {
+                    id: data.correo,
+                    nombre:faker.name.firstName(),
+                    apellido:faker.name.lastName(),
+                    edad:faker.datatype.number({"min":1,"max":100}),
+                    alias:faker.name.middleName(),
+                    avatar: faker.image.avatar()
+                },
+                text: data.mensaje
             }
-            //Insertamos el registro
-            return await db_sqlite3.from(this.tabla).insert(data);
+            //Agregamos el objeto al arreglo
+            this.arregloMensajes = [...this.arregloMensajes,mensaje]
+            //Guardamos el arreglo actualizado en el archivo
+            await fs.promises.writeFile(this.url,JSON.stringify(this.arregloMensajes,"",2));
+            const listaMensajes = {
+                "id":1000,
+                "mensajes":this.arregloMensajes
+            }
+            //Defenimos los esquemas
+            const autor = new schema.Entity("autor");
+            const mensajes = new schema.Entity("mensajes",{
+                author:[autor]
+            });
+            const mensajeSchema = new schema.Entity("listaMensajes",{
+                mensajes: [mensajes]
+            })
+            //Añadimos el id al arreglo
+            let mensajesNormalizado = normalize(listaMensajes,mensajeSchema);
+            inspect(listaMensajes);
+            console.log("--------------------------");
+            inspect(mensajesNormalizado);
+            console.log("--------------------------");
+            console.log("Longitud Normal -> ",JSON.stringify(listaMensajes).length);
+            console.log("Longitud Normalizada -> ",JSON.stringify(mensajesNormalizado).length);
+            return mensajesNormalizado;
+            
         } catch (error) {
             console.log(error);
         }
