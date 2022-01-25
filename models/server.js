@@ -1,7 +1,10 @@
 //Importaciones de terceros
 let express = require("express");
+let expressSession = require('express-session')
+const MongoStore = require('connect-mongo');
 let hbs = require("express-handlebars");
 let cors = require("cors");
+const {validarSesion} = require("../utils/validar-session");
 
 //Clase servidor
 class server{
@@ -11,6 +14,7 @@ class server{
         this.server = require("http").createServer(this.app);
         this.io = require("socket.io")(this.server);
         this.productosPath = "/api/productos";
+        this.loginPath = "/";
         //Middlewares
         this.middlewares();
         //Rutas de mi aplicación
@@ -20,7 +24,7 @@ class server{
         this.app.set("views","views/hbs");
         this.app.set("view engine", "handlebars");
         //
-        this.app.get("/",(req,res,next)=>{
+        this.app.get("/",validarSesion,(req,res,next)=>{
             res.render("../index", {});
         });
         //Sockets
@@ -38,10 +42,27 @@ class server{
         this.app.use(express.urlencoded({extended:true}));
         //Directorio público
         this.app.use(express.static('public'));
+        //Sesiones
+        this.app.use(expressSession({
+            store: MongoStore.create({
+                mongoUrl:'mongodb+srv://root:coderhouse@cursonode.o3yqn.mongodb.net/comision22460?retryWrites=true&w=majority',
+                mongoOptions: {useNewUrlParser:true,useUnifiedTopology:true}
+            }),
+            //
+            secret: "secret",
+            cookie:{
+                httpOnly:false,
+                secure: false,
+                maxAge: 1000*60*20
+            },
+            resave: false,
+            saveUninitialized: true
+        }));
     }
 
     routes(){
         this.app.use(this.productosPath,require("../routes/productos"));
+        this.app.use(this.loginPath,require("../routes/login"));
     }
 
     sockets(){
