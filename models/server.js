@@ -5,6 +5,15 @@ const MongoStore = require('connect-mongo');
 let hbs = require("express-handlebars");
 let cors = require("cors");
 const {validarSesion} = require("../utils/validar-session");
+const mongoose = require('mongoose');
+//
+mongoose.connect(process.env.CONNECTION_STRING)
+.then(()=>{
+    console.log("Nos conectamos a MongoDB");
+})
+.catch((error)=>{
+    console.log(error.message);
+})
 
 //Clase servidor
 class server{
