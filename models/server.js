@@ -6,6 +6,18 @@ let hbs = require("express-handlebars");
 let cors = require("cors");
 const {validarSesion} = require("../utils/validar-session");
 const mongoose = require('mongoose');
+//Usamos Yargs para enviar el puerto como argumento o por defecto 8080
+let yarg = require('yargs');
+let options = {
+    default:{
+        p:8080
+    }
+}
+const procArgv = yarg(process.argv.slice(2));
+const argsRes = procArgv.default(options.default).argv;
+let puertoYarg = argsRes.p;
+//console.log("yarg: ",puertoYarg);
+
 //
 mongoose.connect(process.env.CONNECTION_STRING)
 .then(()=>{
@@ -24,6 +36,7 @@ class server{
         this.io = require("socket.io")(this.server);
         this.productosPath = "/api/productos";
         this.loginPath = "/";
+        this.infoPath = "/";
         //Middlewares
         this.middlewares();
         //Rutas de mi aplicación
@@ -72,6 +85,7 @@ class server{
     routes(){
         this.app.use(this.productosPath,require("../routes/productos"));
         this.app.use(this.loginPath,require("../routes/login"));
+        this.app.use(this.infoPath,require("../routes/info"));
     }
 
     sockets(){
@@ -138,8 +152,11 @@ class server{
     }
 
     listen(){
-        this.server.listen(this.port,()=>{
+        /*this.server.listen(this.port,()=>{
             console.log(`Servidor corriendo en http://localhost:${this.port}`);
+        });*/
+        this.server.listen(puertoYarg,()=>{
+            console.log(`Servidor corriendo en http://localhost:${puertoYarg}`);
         });
     }
 }
