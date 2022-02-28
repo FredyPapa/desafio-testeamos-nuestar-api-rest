@@ -1,6 +1,7 @@
 //Importaciones de terceros
 let express = require("express");
 let expressSession = require('express-session')
+//
 const MongoStore = require('connect-mongo');
 let hbs = require("express-handlebars");
 let cors = require("cors");
@@ -86,7 +87,7 @@ class server{
         this.app.use(this.productosPath,require("../routes/productos"));
         this.app.use(this.loginPath,require("../routes/login"));
         this.app.use(this.infoPath,require("../routes/info"));
-    }
+     }
 
     sockets(){
         let Contenedor = require("../controllers/contenedor");

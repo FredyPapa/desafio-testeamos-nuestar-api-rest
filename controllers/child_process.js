@@ -14,7 +14,7 @@ function obtenerNumeros(cantidad){
     }
     for (let i = 0; i < cantidad; i++) {
         numero = Math.floor((Math.random() * 999) + 1); 
-        console.log(numero);
+        //console.log(numero);
         arregloNumeros[numero]++;
     }
     for (let i = 0; i <= 1000; i++) {

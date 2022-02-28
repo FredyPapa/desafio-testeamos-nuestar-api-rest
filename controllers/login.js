@@ -8,6 +8,10 @@ const {User} = require('../models/user');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const login = async(req=request,res=response,next)=>{
+    res.render("../login",{});
+}
+
 const logoutGet = async(req=request,res=response,next)=>{
     let nombreUsuario = req.session.nombreUsuario;
     req.session.destroy(err=>{
@@ -62,6 +66,7 @@ const registroUsuarioPost = async(req=request,res=response,next)=>{
 }
 
 module.exports = {
+    login,
     logoutGet,
     loginPost,
     registroUsuarioGet,

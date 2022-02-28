@@ -7,6 +7,8 @@ const db_mysql = db_knex_mysql.client;
 //const db_sqlite3 = db_knex_sqlite3.client;
 let {schema,normalize,denormalize} = require('normalizr');
 let inspect = require('../utils/objectPrinter');
+//Logger
+let winstonLoggerError = require('../utils/winston/winstonLoggerError');
 
 class Contenedor{
     constructor(tabla,url){
@@ -40,7 +42,8 @@ class Contenedor{
             //Insertamos el registro
             return await db_mysql.from(this.tabla).insert(data);
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerInfo.error(error);
         }
     }
 
@@ -61,7 +64,8 @@ class Contenedor{
             //Listamos todos los registros
             return await db_mysql.from(this.tabla);
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerInfo.error(error);
         }
     }
 
@@ -80,7 +84,8 @@ class Contenedor{
             }
             return productosTest;
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerInfo.error(error);
         }
     }
 
@@ -127,7 +132,8 @@ class Contenedor{
             return mensajesNormalizado;
             
         } catch (error) {
-            console.log(error);
+            //console.log(error);
+            winstonLoggerInfo.error(error);
         }
     }
 
