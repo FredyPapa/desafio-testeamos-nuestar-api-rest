@@ -1,10 +1,11 @@
 let faker = require('faker');
 faker.locale = "es";
 const fs = require("fs");
-const db_knex_mysql = require("../config/db-mysql");
-const db_knex_sqlite3 = require("../config/db-sqlite3");
-const db_mysql = db_knex_mysql.client;
+//const db_knex_mysql = require("../config/db-mysql");
+//const db_knex_sqlite3 = require("../config/db-sqlite3");
+//const db_mysql = db_knex_mysql.client;
 //const db_sqlite3 = db_knex_sqlite3.client;
+let { Producto } = require("../models");
 let {schema,normalize,denormalize} = require('normalizr');
 let inspect = require('../utils/objectPrinter');
 //Logger
@@ -28,19 +29,7 @@ class Contenedor{
     //Crear/Agregar contenido al archivo
     async save(data){
         try {
-            //Validamos si existe la tabla
-            let existe = await db_mysql.schema.hasTable(this.tabla);
-            //Si no existe Creamos la tabla
-            if(!existe){
-                await db_mysql.schema.createTable(this.tabla,table=>{
-                    table.increments("id").primary(),
-                    table.string("title"),
-                    table.string("price"),
-                    table.string("thumbnail")
-                });
-            }
-            //Insertamos el registro
-            return await db_mysql.from(this.tabla).insert(data);
+            return await Producto.create(data);
         } catch (error) {
             //console.log(error);
             winstonLoggerInfo.error(error);
@@ -50,19 +39,7 @@ class Contenedor{
     //Leer el archivo y devolver todos los objetos
     async getAll(){
         try {
-            //Validamos si existe la tabla
-            let existe = await db_mysql.schema.hasTable(this.tabla);
-            //Si no existe Creamos la tabla
-            if(!existe){
-                await db_mysql.schema.createTable(this.tabla,table=>{
-                    table.increments("id").primary(),
-                    table.string("title"),
-                    table.string("price"),
-                    table.string("thumbnail")
-                });
-            }
-            //Listamos todos los registros
-            return await db_mysql.from(this.tabla);
+            return await Producto.findAll();
         } catch (error) {
             //console.log(error);
             winstonLoggerInfo.error(error);

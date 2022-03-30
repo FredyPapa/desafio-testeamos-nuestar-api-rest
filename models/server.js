@@ -16,8 +16,9 @@ let options = {
 }
 const procArgv = yarg(process.argv.slice(2));
 const argsRes = procArgv.default(options.default).argv;
+//let puertoYarg = argsRes.p;
 let puertoYarg = process.env.PORT;
-console.log("yarg: ",puertoYarg);
+//console.log("yarg: ",puertoYarg);
 
 //
 mongoose.connect(process.env.CONNECTION_STRING)
